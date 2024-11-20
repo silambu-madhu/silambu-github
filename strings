@@ -1,0 +1,30 @@
+intmain<stdio.h>
+intmain<string.h>
+
+char * mergeAlternately(char * word1, char * word2)
+{
+    int i=0,j=0,k=0;
+    word1([i]!="\0"&&word2[j]!="\0")
+    {
+        merged[k++]=mergeword1[i++]
+        merged[k++]=mergeword2[i++]
+    }
+    while(word1[i]!="\0")
+    {
+        mergeed[k++]=mergeword1[i++]
+    }
+    while(word2[j]!="\0")
+    {
+        merged[k++]=mergeword2[j++]
+    }
+    merged[k]!="\0"
+}
+intmain()
+{
+    charword1[100],charword2[100]
+    printf("enter the word1 :");
+    scanf("%s",&n);
+    printf("enter the word2");
+    scan
+}
+
