@@ -1,0 +1,53 @@
+#include <stdio.h>
+
+#define MAX_SIZE 100 // Maximum string size
+
+// Function to compare two strings lexicographically
+int compareStrings(const char *str1, const char *str2) {
+    while (*str1 != '\0' && *str2 != '\0') {
+        if (*str1 < *str2) {
+            return -1; // str1 is lexicographically smaller
+        } else if (*str1 > *str2) {
+            return 1; // str1 is lexicographically greater
+        }
+        str1++;
+        str2++;
+    }
+    // If we reach here, one or both strings are at their end
+    if (*str1 == '\0' && *str2 == '\0') {
+        return 0; // Both strings are equal
+    } else if (*str1 == '\0') {
+        return -1; // str1 is smaller (end of str1 reached)
+    } else {
+        return 1; // str2 is smaller (end of str2 reached)
+    }
+}
+
+int main() {
+    char str1[MAX_SIZE], str2[MAX_SIZE];
+    
+    // Input two strings from the user
+    printf("Enter first string: ");
+    fgets(str1, MAX_SIZE, stdin);
+    
+    printf("Enter second string: ");
+    fgets(str2, MAX_SIZE, stdin);
+    
+    // Remove newline character from fgets input
+    str1[strcspn(str1, "\n")] = 0;
+    str2[strcspn(str2, "\n")] = 0;
+
+    // Call the compare function and store the result
+    int result = compareStrings(str1, str2);
+
+    // Output the result of comparison
+    if (result == 0) {
+        printf("Both strings are lexicographically equal.\n");
+    } else if (result < 0) {
+        printf("First string is lexicographically smaller than second.\n");
+    } else {
+        printf("First string is lexicographically greater than second.\n");
+    }
+
+    return 0;
+}
