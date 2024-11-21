@@ -1,0 +1,35 @@
+#include <stdio.h>
+#include <string.h>
+
+int main() {
+    char str[100];          // Array to hold the input string
+    char char_to_remove;    // Character to be removed
+    int i, j = 0;           // Loop counters
+
+    // Input the string from the user
+    printf("Enter a string: ");
+    fgets(str, sizeof(str), stdin);
+
+    // Remove newline character if present
+    size_t len = strlen(str);
+    if (len > 0 && str[len - 1] == '\n') {
+        str[len - 1] = '\0';
+    }
+
+    // Input the character to remove
+    printf("Enter the character to remove: ");
+    scanf("%c", &char_to_remove);
+
+    // Remove all occurrences of the character
+    for (i = 0; str[i] != '\0'; i++) {
+        if (str[i] != char_to_remove) {
+            str[j++] = str[i]; // Copy non-matching characters
+        }
+    }
+    str[j] = '\0'; // Null-terminate the modified string
+
+    // Print the modified string
+    printf("String after removing all occurrences of '%c': %s\n", char_to_remove, str);
+
+    return 0;
+}
