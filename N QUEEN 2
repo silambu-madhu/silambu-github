@@ -1,0 +1,60 @@
+#include <stdio.h>
+#include <stdbool.h>
+
+int countSolutions(int n, int row, bool* cols, bool* diag1, bool* diag2) {
+    if (row == n) {
+        return 1; // Found a valid solution
+    }
+
+    int totalSolutions = 0;
+
+    for (int col = 0; col < n; col++) {
+        // Check if the column and diagonals are free
+        if (!cols[col] && !diag1[row + col] && !diag2[row - col + n - 1]) {
+            // Place the queen
+            cols[col] = true;
+            diag1[row + col] = true;
+            diag2[row - col + n - 1] = true;
+
+            // Recur to place the next queen
+            totalSolutions += countSolutions(n, row + 1, cols, diag1, diag2);
+
+            // Remove the queen (backtrack)
+            cols[col] = false;
+            diag1[row + col] = false;
+            diag2[row - col + n - 1] = false;
+        }
+    }
+
+    return totalSolutions;
+}
+
+int totalNQueens(int n) {
+    bool cols[n]; // Columns where queens are placed
+    bool diag1[2 * n - 1]; // Diagonal from top-left to bottom-right
+    bool diag2[2 * n - 1]; // Diagonal from top-right to bottom-left
+
+    // Initialize all arrays to false
+    for (int i = 0; i < n; i++) {
+        cols[i] = false;
+    }
+    for (int i = 0; i < 2 * n - 1; i++) {
+        diag1[i] = false;
+        diag2[i] = false;
+    }
+
+    return countSolutions(n, 0, cols, diag1, diag2);
+}
+
+int main() {
+    int n;
+
+    printf("Enter the value of n: ");
+    scanf("%d", &n);
+
+    int result = totalNQueens(n);
+    
+    printf("Number of distinct solutions for %d-Queens: %d\n", n, result);
+
+    return 0;
+}
