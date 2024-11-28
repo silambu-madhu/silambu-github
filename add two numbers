@@ -1,0 +1,13 @@
+for(int i = 0; i < len/2; i++) {
+    if(x/pow != x%10) {
+        return FALSE; // If the first and last digits don't match
+    }
+    // Remove the last digit
+    x = x - (x%10);
+    // Remove the first digit
+    x = x - (x/pow)*pow;
+    // Shift digits to the right
+    x = x / 10;
+    // Update pow for the next iteration
+    pow = pow/(10*10);
+}
