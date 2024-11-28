@@ -1,0 +1,51 @@
+#include <stdio.h>
+#include <stdbool.h>
+#include <string.h>
+
+bool isMatch(char *s, char *p) {
+    int sLen = strlen(s);
+    int pLen = strlen(p);
+    
+    // Create a DP table with (sLen + 1) x (pLen + 1)
+    bool dp[sLen + 1][pLen + 1];
+    
+    // Initialize the DP table
+    memset(dp, false, sizeof(dp));
+    dp[0][0] = true; // Empty pattern matches empty string
+
+    // Handle patterns that start with '*'
+    for (int j = 1; j <= pLen; j++) {
+        if (p[j - 1] == '*') {
+            dp[0][j] = dp[0][j - 1]; // '*' can match empty sequence
+        }
+    }
+
+    // Fill the DP table
+    for (int i = 1; i <= sLen; i++) {
+        for (int j = 1; j <= pLen; j++) {
+            if (p[j - 1] == s[i - 1] || p[j - 1] == '?') {
+                dp[i][j] = dp[i - 1][j - 1]; // Characters match or '?' matches
+            } else if (p[j - 1] == '*') {
+                dp[i][j] = dp[i][j - 1] || dp[i - 1][j]; // '*' matches empty or one more character
+            }
+        }
+    }
+
+    return dp[sLen][pLen]; // Return the result for full string and pattern match
+}
+
+int main() {
+    char s1[] = "aa";
+    char p1[] = "a";
+    printf("Input: s = \"%s\", p = \"%s\"\nOutput: %s\n", s1, p1, isMatch(s1, p1) ? "true" : "false"); // Output: false
+
+    char s2[] = "aa";
+    char p2[] = "*";
+    printf("Input: s = \"%s\", p = \"%s\"\nOutput: %s\n", s2, p2, isMatch(s2, p2) ? "true" : "false"); // Output: true
+
+    char s3[] = "cb";
+    char p3[] = "?a";
+    printf("Input: s = \"%s\", p = \"%s\"\nOutput: %s\n", s3, p3, isMatch(s3, p3) ? "true" : "false"); // Output: false
+
+    return 0;
+}
