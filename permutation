@@ -1,0 +1,56 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+void getPermutation(int n, int k, char *result) {
+    // Create an array to hold numbers from 1 to n
+    int *numbers = (int *)malloc(n * sizeof(int));
+    for (int i = 0; i < n; i++) {
+        numbers[i] = i + 1; // Fill with 1 to n
+    }
+
+    // Adjust k to be zero-based
+    k--; 
+
+    // Factorial array to store factorial values
+    int *factorial = (int *)malloc(n * sizeof(int));
+    factorial[0] = 1;
+    for (int i = 1; i < n; i++) {
+        factorial[i] = factorial[i - 1] * i; // Calculate factorials
+    }
+
+    // Build the k-th permutation
+    for (int i = 0; i < n; i++) {
+        int index = k / factorial[n - 1 - i]; // Determine which number to pick
+        result[i] = '0' + numbers[index]; // Convert number to char
+        // Remove the used number from the list
+        for (int j = index; j < n - 1; j++) {
+            numbers[j] = numbers[j + 1];
+        }
+        k %= factorial[n - 1 - i]; // Update k for the next position
+    }
+
+    result[n] = '\0'; // Null-terminate the string
+
+    free(numbers);
+    free(factorial);
+}
+
+int main() {
+    int n, k;
+
+    printf("Enter n: ");
+    scanf("%d", &n);
+    
+    printf("Enter k: ");
+    scanf("%d", &k);
+
+    char *result = (char *)malloc((n + 1) * sizeof(char)); // +1 for null terminator
+
+    getPermutation(n, k, result);
+    
+    printf("The %d-th permutation of numbers from 1 to %d is: %s\n", k, n, result);
+
+    free(result);
+    
+    return 0;
+}
