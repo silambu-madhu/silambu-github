@@ -1,0 +1,103 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+void backtrack(int n, int row, int* col, int* diag1, int* diag2, char*** result, char** board, int* returnSize) {
+    if (row == n) {
+        // Found a valid solution, add it to the result
+        result[*returnSize] = (char**)malloc(n * sizeof(char*));
+        for (int i = 0; i < n; i++) {
+            result[*returnSize][i] = strdup(board[i]);
+        }
+        (*returnSize)++;
+        return;
+    }
+
+    for (int j = 0; j < n; j++) {
+        // Check if the column and diagonals are free
+        if (col[j] || diag1[row + j] || diag2[row - j + n - 1]) continue;
+
+        // Place the queen
+        board[row][j] = 'Q';
+        col[j] = 1;
+        diag1[row + j] = 1;
+        diag2[row - j + n - 1] = 1;
+
+        // Move to the next row
+        backtrack(n, row + 1, col, diag1, diag2, result, board, returnSize);
+
+        // Remove the queen and backtrack
+        board[row][j] = '.';
+        col[j] = 0;
+        diag1[row + j] = 0;
+        diag2[row - j + n - 1] = 0;
+    }
+}
+
+char*** solveNQueens(int n, int* returnSize) {
+    *returnSize = 0;
+    char*** result = (char***)malloc(92 * sizeof(char**)); // Maximum solutions for n=9 is 92
+
+    // Create a board initialized with '.'
+    char** board = (char**)malloc(n * sizeof(char*));
+    for (int i = 0; i < n; i++) {
+        board[i] = (char*)malloc((n + 1) * sizeof(char)); // +1 for null terminator
+        memset(board[i], '.', n);
+        board[i][n] = '\0'; // Null-terminate each row
+    }
+
+    // Arrays to keep track of columns and diagonals
+    int* col = (int*)calloc(n, sizeof(int));
+    int* diag1 = (int*)calloc(2 * n - 1, sizeof(int)); // For row + col
+    int* diag2 = (int*)calloc(2 * n - 1, sizeof(int)); // For row - col
+
+    // Start backtracking from the first row
+    backtrack(n, 0, col, diag1, diag2, result, board, returnSize);
+
+    // Free allocated memory
+    free(col);
+    free(diag1);
+    free(diag2);
+    
+    for (int i = 0; i < n; i++) {
+        free(board[i]);
+    }
+    free(board);
+
+    return result;
+}
+
+void freeResult(char*** result, int size) {
+    for (int i = 0; i < size; i++) {
+        for (int j = 0; j < size; j++) {
+            free(result[i][j]);
+        }
+        free(result[i]);
+    }
+    free(result);
+}
+
+int main() {
+    int n = 4;
+    int returnSize;
+    
+    char*** solutions = solveNQueens(n, &returnSize);
+    
+    printf("Total Solutions: %d\n", returnSize);
+    
+    for (int i = 0; i < returnSize; i++) {
+        printf("Solution %d:\n", i + 1);
+        for (int j = 0; j < n; j++) {
+            printf("%s\n", solutions[i][j]);
+        }
+        printf("\n");
+        
+        // Free each solution's board
+        freeResult(solutions[i], n);
+    }
+
+    // Free the solutions array
+    free(solutions);
+
+    return 0;
+}
